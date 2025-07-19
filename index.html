@@ -7,10 +7,9 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f0f2f5;
             margin: 0;
             padding: 20px;
-            min-height: 100vh;
         }
         
         .container {
@@ -18,8 +17,8 @@
             margin: 0 auto;
             background: white;
             padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         h1 {
@@ -28,18 +27,18 @@
             margin-bottom: 30px;
         }
         
-        .input-section {
-            margin-bottom: 30px;
+        .input-box {
+            margin-bottom: 20px;
             padding: 20px;
-            background: #f0f8ff;
-            border-radius: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
         }
         
         input[type="text"] {
             width: 70%;
             padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
             font-size: 16px;
         }
         
@@ -48,85 +47,81 @@
             background: #007bff;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
-            margin: 5px;
+            margin-left: 10px;
         }
         
         button:hover {
             background: #0056b3;
         }
         
-        .remove-btn {
+        .delete-btn {
             background: #dc3545;
             padding: 5px 10px;
             font-size: 12px;
         }
         
-        .remove-btn:hover {
+        .delete-btn:hover {
             background: #c82333;
         }
         
-        .players-list {
-            background: #f8f9fa;
+        .players-box {
+            margin: 20px 0;
             padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+            background: #e9ecef;
+            border-radius: 8px;
+            min-height: 100px;
         }
         
         .player-item {
+            background: white;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px;
-            margin: 5px 0;
-            background: white;
-            border-radius: 5px;
-            border: 1px solid #eee;
+        }
+        
+        .stats {
+            text-align: center;
+            background: #d4edda;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #155724;
+            font-weight: bold;
+        }
+        
+        .data-box {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 14px;
+            margin-top: 20px;
+            word-break: break-all;
         }
         
         .alert {
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 5px;
-            font-weight: bold;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
             text-align: center;
+            font-weight: bold;
         }
         
         .alert-success {
             background: #d4edda;
             color: #155724;
-            border: 1px solid #c3e6cb;
         }
         
         .alert-danger {
             background: #f8d7da;
             color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-        
-        .stats {
-            text-align: center;
-            background: #e9ecef;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .roblox-data {
-            background: #2d3748;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            font-family: monospace;
-            font-size: 14px;
-            margin-top: 20px;
-        }
-
-        /* البيانات المخفية للوصول من Roblox */
-        #hiddenData {
-            display: none;
         }
     </style>
 </head>
@@ -135,46 +130,44 @@
         <h1>🎮 مدير أذونات Roblox</h1>
         
         <div class="stats">
-            <h3 id="playerCount">0 لاعب مسموح</h3>
-            <p>آخر تحديث: <span id="lastUpdate">الآن</span></p>
+            <div id="playerCount">0 لاعب مسموح</div>
+            <div>آخر تحديث: <span id="lastUpdate">الآن</span></div>
         </div>
 
-        <div class="input-section">
+        <div class="input-box">
             <h3>➕ إضافة لاعب جديد</h3>
-            <input type="text" id="playerInput" placeholder="اكتب اسم اللاعب..." maxlength="20">
+            <input type="text" id="playerInput" placeholder="اكتب اسم اللاعب..." maxlength="25">
             <button onclick="addPlayer()">إضافة</button>
             <button onclick="clearAll()" style="background: #dc3545;">مسح الكل</button>
-            <div id="alertMessage"></div>
+            <div id="message"></div>
         </div>
 
-        <div class="players-list">
-            <h3>👥 قائمة اللاعبين المسموح لهم:</h3>
+        <div class="players-box">
+            <h3>👥 قائمة اللاعبين:</h3>
             <div id="playersList">
-                <p style="text-align: center; color: #666; font-style: italic;">
+                <div style="text-align: center; color: #666; padding: 20px;">
                     لا يوجد لاعبين في القائمة
-                </p>
+                </div>
             </div>
         </div>
 
-        <div class="roblox-data">
+        <div class="data-box">
             <strong>📋 بيانات للـ Roblox Script:</strong><br>
-            <span id="robloxOutput">[]</span>
-        </div>
-
-        <!-- البيانات المخفية للوصول من Roblox -->
-        <div id="hiddenData">
-            <div id="playersArray">[]</div>
+            <div id="dataForRoblox">[]</div>
         </div>
     </div>
 
-    <script>
-        // قائمة اللاعبين العامة
-        let allowedPlayers = [];
+    <!-- البيانات المخفية للـ Roblox -->
+    <script id="roblox-data" type="application/json">[]</script>
 
-        // تحديث العرض
-        function updateDisplay() {
+    <script>
+        // 📋 قائمة اللاعبين الرئيسية
+        let players = [];
+
+        // 🔄 تحديث جميع العناصر
+        function updateEverything() {
             // تحديث العدد
-            document.getElementById('playerCount').textContent = allowedPlayers.length + ' لاعب مسموح';
+            document.getElementById('playerCount').textContent = players.length + ' لاعب مسموح';
             
             // تحديث الوقت
             const now = new Date();
@@ -183,120 +176,120 @@
                 now.getMinutes().toString().padStart(2, '0');
 
             // تحديث قائمة اللاعبين
-            const playersList = document.getElementById('playersList');
-            
-            if (allowedPlayers.length === 0) {
-                playersList.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">لا يوجد لاعبين في القائمة</p>';
+            const list = document.getElementById('playersList');
+            if (players.length === 0) {
+                list.innerHTML = '<div style="text-align: center; color: #666; padding: 20px;">لا يوجد لاعبين في القائمة</div>';
             } else {
-                playersList.innerHTML = allowedPlayers
-                    .map(player => `
-                        <div class="player-item">
-                            <span>🎮 ${player}</span>
-                            <button class="remove-btn" onclick="removePlayer('${player}')">حذف</button>
-                        </div>
-                    `).join('');
+                list.innerHTML = players.map(player => 
+                    `<div class="player-item">
+                        <span>🎮 ${player}</span>
+                        <button class="delete-btn" onclick="removePlayer('${player}')">حذف</button>
+                    </div>`
+                ).join('');
             }
 
-            // تحديث بيانات Roblox (مرئية ومخفية)
-            const jsonData = JSON.stringify(allowedPlayers);
-            document.getElementById('robloxOutput').textContent = jsonData;
-            document.getElementById('playersArray').textContent = jsonData;
+            // تحديث البيانات للـ Roblox
+            const jsonData = JSON.stringify(players);
+            document.getElementById('dataForRoblox').textContent = jsonData;
+            document.getElementById('roblox-data').textContent = jsonData;
             
-            // حفظ البيانات
+            // حفظ في localStorage
             localStorage.setItem('robloxPlayers', jsonData);
             
-            // طباعة في Console للتشخيص
-            console.log('تحديث البيانات:', allowedPlayers);
-            console.log('JSON:', jsonData);
+            // طباعة في console للتشخيص
+            console.log('تحديث البيانات:', players);
+            console.log('JSON للـ Roblox:', jsonData);
         }
 
-        // إضافة لاعب
+        // ➕ إضافة لاعب
         function addPlayer() {
             const input = document.getElementById('playerInput');
-            const playerName = input.value.trim();
+            const name = input.value.trim();
 
-            if (!playerName) {
-                showAlert('اكتب اسم اللاعب!', 'danger');
+            if (!name) {
+                showMessage('اكتب اسم اللاعب!', 'danger');
                 return;
             }
 
-            if (playerName.length < 3) {
-                showAlert('الاسم يجب أن يكون 3 أحرف على الأقل', 'danger');
+            if (name.length < 3) {
+                showMessage('الاسم يجب أن يكون 3 أحرف على الأقل', 'danger');
                 return;
             }
 
-            if (allowedPlayers.includes(playerName)) {
-                showAlert('اللاعب موجود بالفعل!', 'danger');
+            if (players.includes(name)) {
+                showMessage('اللاعب موجود بالفعل!', 'danger');
                 return;
             }
 
-            allowedPlayers.push(playerName);
-            allowedPlayers.sort();
+            players.push(name);
+            players.sort(); // ترتيب أبجدي
             input.value = '';
             
-            showAlert('تم إضافة ' + playerName + ' بنجاح!', 'success');
-            updateDisplay();
+            showMessage('تم إضافة ' + name + ' بنجاح!', 'success');
+            updateEverything();
         }
 
-        // حذف لاعب
-        function removePlayer(playerName) {
-            if (confirm('هل تريد حذف ' + playerName + '؟')) {
-                allowedPlayers = allowedPlayers.filter(p => p !== playerName);
-                showAlert('تم حذف ' + playerName, 'danger');
-                updateDisplay();
+        // ❌ حذف لاعب
+        function removePlayer(name) {
+            if (confirm('هل تريد حذف ' + name + '؟')) {
+                players = players.filter(p => p !== name);
+                showMessage('تم حذف ' + name, 'danger');
+                updateEverything();
             }
         }
 
-        // مسح الكل
+        // 🗑️ مسح الكل
         function clearAll() {
             if (confirm('هل تريد مسح جميع اللاعبين؟')) {
-                allowedPlayers = [];
-                showAlert('تم مسح جميع اللاعبين', 'danger');
-                updateDisplay();
+                players = [];
+                showMessage('تم مسح جميع اللاعبين', 'danger');
+                updateEverything();
             }
         }
 
-        // عرض رسالة
-        function showAlert(message, type) {
-            const alertDiv = document.getElementById('alertMessage');
-            alertDiv.innerHTML = '<div class="alert alert-' + type + '">' + message + '</div>';
-            
-            setTimeout(() => {
-                alertDiv.innerHTML = '';
-            }, 3000);
+        // 💬 عرض رسالة
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.innerHTML = '<div class="alert alert-' + type + '">' + text + '</div>';
+            setTimeout(() => msg.innerHTML = '', 3000);
         }
 
-        // تحميل البيانات المحفوظة
+        // 📥 تحميل البيانات المحفوظة
         function loadData() {
             const saved = localStorage.getItem('robloxPlayers');
             if (saved) {
                 try {
-                    allowedPlayers = JSON.parse(saved);
-                    console.log('تم تحميل البيانات:', allowedPlayers);
+                    players = JSON.parse(saved);
+                    console.log('تم تحميل البيانات:', players);
                 } catch (e) {
                     console.error('خطأ في تحميل البيانات:', e);
-                    allowedPlayers = [];
+                    players = [];
                 }
             }
-            updateDisplay();
+            updateEverything();
         }
 
-        // إضافة بالضغط على Enter
+        // ⌨️ إضافة بالضغط على Enter
         document.getElementById('playerInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 addPlayer();
             }
         });
 
-        // تهيئة الصفحة
+        // 🚀 تهيئة الصفحة
         console.log('🚀 بدء تحميل الموقع...');
         loadData();
         console.log('✅ الموقع جاهز!');
         
-        // تحديث دوري (كل 10 ثوانِ للتأكد)
-        setInterval(function() {
-            console.log('📊 فحص دوري - اللاعبين:', allowedPlayers.length);
-        }, 10000);
+        // تأكد من أن البيانات متاحة عالمياً
+        window.allowedPlayers = players;
+        
+        // تحديث البيانات العامة عند أي تغيير
+        const originalUpdate = updateEverything;
+        updateEverything = function() {
+            originalUpdate();
+            window.allowedPlayers = players;
+        };
     </script>
 </body>
 </html>
