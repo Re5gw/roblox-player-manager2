@@ -340,9 +340,32 @@
                 </div>
                 <div>
                     <button onclick="exportPlayers()" class="btn btn-export">تصدير القائمة</button>
+                    <button onclick="downloadJSON()" class="btn btn-export">تحميل JSON للروبلوكس</button>
+                    <button onclick="copyJSON()" class="btn btn-primary">نسخ JSON</button>
                     <label for="importFile" class="file-label">استيراد قائمة</label>
                     <input type="file" id="importFile" class="file-input" accept=".json" onchange="importPlayers(event)">
                     <button onclick="clearAll()" class="btn btn-danger">مسح الكل</button>
+                </div>
+            </div>
+
+            <!-- معلومات API للروبلوكس -->
+            <div class="input-section">
+                <h3 style="color: #495057; margin-bottom: 15px;">📡 معلومات API للروبلوكس</h3>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px solid #dee2e6;">
+                    <p><strong>رابط JSON API:</strong></p>
+                    <code id="jsonUrl" style="background: white; padding: 10px; border-radius: 5px; display: block; margin: 10px 0; word-break: break-all;">
+                        يتم إنشاؤه تلقائياً...
+                    </code>
+                    <button onclick="copyURL()" class="btn btn-primary">نسخ الرابط</button>
+                    <button onclick="testAPI()" class="btn btn-export">اختبار API</button>
+                </div>
+                
+                <!-- عرض JSON الحالي -->
+                <div style="margin-top: 20px;">
+                    <h4 style="color: #495057;">📋 بيانات JSON الحالية:</h4>
+                    <pre id="jsonPreview" style="background: #f8f9fa; padding: 15px; border-radius: 10px; border: 1px solid #dee2e6; max-height: 200px; overflow-y: auto; font-size: 12px;">
+                        {}
+                    </pre>
                 </div>
             </div>
 
@@ -637,9 +660,89 @@
             metaTag.content = JSON.stringify(apiData);
         }
 
+        // تحديث ملف JSON للـ Roblox API
+        function updateJSONFile() {
+            const jsonData = {
+                players: players.map(p => p.name),
+                totalCount: players.length,
+                lastUpdated: new Date().toISOString(),
+                version: "1.0",
+                status: "active"
+            };
+
+            // تحديث معاينة JSON
+            document.getElementById('jsonPreview').textContent = JSON.stringify(jsonData, null, 2);
+            
+            // تحديث رابط API
+            const currentUrl = window.location.href;
+            const baseUrl = currentUrl.endsWith('/') ? currentUrl : currentUrl + '/';
+            const jsonUrl = baseUrl + 'players.json';
+            document.getElementById('jsonUrl').textContent = jsonUrl;
+            
+            return jsonData;
+        }
+
+        // تحميل ملف JSON
+        function downloadJSON() {
+            const jsonData = updateJSONFile();
+            const jsonStr = JSON.stringify(jsonData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(jsonStr);
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', 'players.json');
+            linkElement.click();
+            
+            showNotification('تم تحميل ملف JSON للروبلوكس', 'success');
+        }
+
+        // نسخ JSON إلى الحافظة
+        function copyJSON() {
+            const jsonData = updateJSONFile();
+            const jsonStr = JSON.stringify(jsonData, null, 2);
+            
+            navigator.clipboard.writeText(jsonStr).then(function() {
+                showNotification('تم نسخ JSON إلى الحافظة', 'success');
+            }).catch(function() {
+                // fallback للمتصفحات القديمة
+                const textArea = document.createElement('textarea');
+                textArea.value = jsonStr;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('تم نسخ JSON إلى الحافظة', 'success');
+            });
+        }
+
+        // نسخ رابط API
+        function copyURL() {
+            const url = document.getElementById('jsonUrl').textContent;
+            
+            navigator.clipboard.writeText(url).then(function() {
+                showNotification('تم نسخ رابط API إلى الحافظة', 'success');
+            }).catch(function() {
+                showNotification('فشل في نسخ الرابط', 'error');
+            });
+        }
+
+        // اختبار API
+        function testAPI() {
+            const jsonData = updateJSONFile();
+            const testResult = {
+                status: 'success',
+                playersCount: jsonData.totalCount,
+                lastUpdated: jsonData.lastUpdated,
+                samplePlayers: jsonData.players.slice(0, 3)
+            };
+            
+            alert('نتيجة اختبار API:\n\n' + JSON.stringify(testResult, null, 2));
+        }
+
         // تحديث API عند تغيير البيانات
         function updateAPI() {
             createAPIEndpoint();
+            updateJSONFile();
         }
     </script>
 </body>
