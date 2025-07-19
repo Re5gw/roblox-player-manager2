@@ -113,6 +113,17 @@
             background: #0056b3;
         }
 
+        .btn-clear {
+            background: #dc3545;
+            color: white;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .btn-clear:hover {
+            background: #c82333;
+        }
+
         .players-list {
             background: white;
             border: 2px solid #eee;
@@ -182,27 +193,21 @@
             border: 1px solid #f5c6cb;
         }
 
-        .code-section {
-            background: #2d3748;
-            color: #e2e8f0;
+        .debug-section {
+            background: #fff3cd;
             padding: 20px;
             border-radius: 15px;
             margin-top: 30px;
-            font-family: 'Courier New', monospace;
+            border: 1px solid #ffeaa7;
         }
 
-        .copy-btn {
-            background: #4299e1;
-            color: white;
-            border: none;
-            padding: 10px 15px;
+        .debug-info {
+            font-family: monospace;
+            background: #f8f9fa;
+            padding: 10px;
             border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .api-data {
-            display: none;
+            margin: 10px 0;
+            font-size: 14px;
         }
 
         @media (max-width: 600px) {
@@ -251,32 +256,41 @@
                 </div>
             </div>
 
-            <button class="btn btn-export" onclick="exportScript()">
-                📋 تصدير سكريپت Roblox
+            <button class="btn btn-export" onclick="testRobloxConnection()">
+                🔗 اختبار الاتصال مع Roblox
             </button>
 
-            <div class="code-section">
-                <h4>📝 سكريپت Roblox (جاهز للنسخ):</h4>
-                <pre id="scriptOutput">-- أضف لاعبين أولاً لرؤية السكريپت</pre>
-                <button class="copy-btn" onclick="copyScript()">📋 نسخ السكريپت</button>
+            <button class="btn btn-clear" onclick="clearAllPlayers()">
+                🗑️ مسح جميع اللاعبين
+            </button>
+
+            <div class="debug-section">
+                <h4>🔧 معلومات التشخيص:</h4>
+                <div class="debug-info" id="debugInfo">
+                    جاري التحميل...
+                </div>
+                
+                <h4>📋 بيانات للـ Roblox Script:</h4>
+                <div class="debug-info" id="robloxData">
+                    []
+                </div>
+                
+                <button class="btn btn-add" onclick="updateDebugInfo()" style="width: 100%; margin-top: 10px;">
+                    🔄 تحديث معلومات التشخيص
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- بيانات API مخفية للوصول من Roblox -->
-    <div id="apiData" class="api-data">
-        <div id="playersJson">[]</div>
-    </div>
-
     <script>
-        // 📋 قائمة اللاعبين المسموح لهم
-        let allowedPlayers = [];
+        // 📋 قائمة اللاعبين العامة - يجب أن تكون متاحة لـ Roblox
+        window.allowedPlayers = [];
 
         // 🔄 تحديث العرض
         function updateDisplay() {
             // تحديث الإحصائيات
-            document.getElementById('playerCount').textContent = `${allowedPlayers.length} لاعب مسموح`;
-            document.getElementById('listCount').textContent = allowedPlayers.length;
+            document.getElementById('playerCount').textContent = `${window.allowedPlayers.length} لاعب مسموح`;
+            document.getElementById('listCount').textContent = window.allowedPlayers.length;
             
             // تحديث الوقت
             const now = new Date();
@@ -287,7 +301,7 @@
             // تحديث قائمة اللاعبين
             const playersList = document.getElementById('playersList');
             
-            if (allowedPlayers.length === 0) {
+            if (window.allowedPlayers.length === 0) {
                 playersList.innerHTML = `
                     <div class="empty-message">
                         لا يوجد لاعبين في القائمة<br>
@@ -295,7 +309,7 @@
                     </div>
                 `;
             } else {
-                playersList.innerHTML = allowedPlayers
+                playersList.innerHTML = window.allowedPlayers
                     .map(player => `
                         <div class="player-item">
                             <span class="player-name">🎮 ${player}</span>
@@ -306,14 +320,14 @@
                     `).join('');
             }
 
-            // تحديث بيانات API
-            document.getElementById('playersJson').textContent = JSON.stringify(allowedPlayers);
-            
-            // تحديث السكريپت
-            updateScript();
+            // تحديث بيانات Roblox
+            document.getElementById('robloxData').textContent = JSON.stringify(window.allowedPlayers);
             
             // حفظ البيانات
             saveData();
+            
+            // تحديث معلومات التشخيص
+            updateDebugInfo();
         }
 
         // ➕ إضافة لاعب
@@ -332,26 +346,43 @@
                 return;
             }
 
-            if (allowedPlayers.includes(playerName)) {
+            if (window.allowedPlayers.includes(playerName)) {
                 showAlert(`اللاعب "${playerName}" موجود بالفعل`, 'danger');
                 return;
             }
 
             // إضافة اللاعب
-            allowedPlayers.push(playerName);
-            allowedPlayers.sort(); // ترتيب أبجدي
+            window.allowedPlayers.push(playerName);
+            window.allowedPlayers.sort(); // ترتيب أبجدي
             input.value = '';
             
             showAlert(`تم إضافة "${playerName}" بنجاح ✅`, 'success');
             updateDisplay();
+            
+            console.log('تم إضافة لاعب:', playerName);
+            console.log('القائمة الحالية:', window.allowedPlayers);
         }
 
         // ❌ حذف لاعب
         function removePlayer(playerName) {
             if (confirm(`هل تريد حذف "${playerName}"؟`)) {
-                allowedPlayers = allowedPlayers.filter(p => p !== playerName);
+                window.allowedPlayers = window.allowedPlayers.filter(p => p !== playerName);
                 showAlert(`تم حذف "${playerName}"`, 'danger');
                 updateDisplay();
+                
+                console.log('تم حذف لاعب:', playerName);
+                console.log('القائمة الحالية:', window.allowedPlayers);
+            }
+        }
+
+        // 🗑️ مسح جميع اللاعبين
+        function clearAllPlayers() {
+            if (confirm('هل تريد مسح جميع اللاعبين؟')) {
+                window.allowedPlayers = [];
+                showAlert('تم مسح جميع اللاعبين', 'danger');
+                updateDisplay();
+                
+                console.log('تم مسح جميع اللاعبين');
             }
         }
 
@@ -365,90 +396,57 @@
             }, 3000);
         }
 
-        // 🔄 تحديث السكريپت
-        function updateScript() {
-            const playersArray = allowedPlayers.map(p => `"${p}"`).join(', ');
-            
-            const script = allowedPlayers.length > 0 ? 
-`-- 🎮 سكريپت أذونات اللاعبين
--- تم إنشاؤه تلقائياً من الموقع
-
-local Players = game:GetService("Players")
-
--- 📋 قائمة اللاعبين المسموح لهم (${allowedPlayers.length} لاعب)
-local allowedPlayers = {${playersArray}}
-
--- ✅ التحقق من وجود اللاعب في القائمة
-local function isAllowed(playerName)
-    for _, name in pairs(allowedPlayers) do
-        if name == playerName then
-            return true
-        end
-    end
-    return false
-end
-
--- 🚫 عند دخول لاعب جديد
-Players.PlayerAdded:Connect(function(player)
-    print("🔍 فحص: " .. player.Name)
-    
-    if isAllowed(player.Name) then
-        print("✅ مسموح: " .. player.Name)
-    else
-        print("❌ مرفوض: " .. player.Name)
-        wait(1)
-        player:Kick("🔒 غير مسموح لك بدخول هذا الخادم!")
-    end
-end)
-
-print("🚀 نظام الأذونات جاهز - " .. #allowedPlayers .. " لاعب مسموح")`
-: '-- أضف لاعبين أولاً لتوليد السكريپت';
-
-            document.getElementById('scriptOutput').textContent = script;
-        }
-
-        // 📋 تصدير السكريپت
-        function exportScript() {
-            if (allowedPlayers.length === 0) {
-                showAlert('أضف لاعبين أولاً!', 'danger');
+        // 🔗 اختبار الاتصال مع Roblox
+        function testRobloxConnection() {
+            if (window.allowedPlayers.length === 0) {
+                showAlert('أضف لاعبين أولاً للاختبار!', 'danger');
                 return;
             }
             
-            copyScript();
-            showAlert('تم نسخ السكريپت! الصقه في Roblox Studio', 'success');
+            showAlert(`البيانات جاهزة للـ Roblox Script! العدد: ${window.allowedPlayers.length}`, 'success');
+            
+            console.log('=== اختبار الاتصال مع Roblox ===');
+            console.log('عدد اللاعبين:', window.allowedPlayers.length);
+            console.log('القائمة:', window.allowedPlayers);
+            console.log('JSON:', JSON.stringify(window.allowedPlayers));
         }
 
-        // 📄 نسخ السكريپت
-        function copyScript() {
-            const script = document.getElementById('scriptOutput').textContent;
+        // 🔧 تحديث معلومات التشخيص
+        function updateDebugInfo() {
+            const debugInfo = `
+تاريخ آخر تحديث: ${new Date().toLocaleString('ar-SA')}
+عدد اللاعبين: ${window.allowedPlayers.length}
+حالة localStorage: ${localStorage.getItem('robloxPlayers') ? 'موجود' : 'غير موجود'}
+متصفح: ${navigator.userAgent.split(' ')[0]}
+الرابط الحالي: ${window.location.href}
+            `.trim();
             
-            navigator.clipboard.writeText(script).then(() => {
-                console.log('تم نسخ السكريپت');
-            }).catch(() => {
-                // للمتصفحات القديمة
-                const textArea = document.createElement('textarea');
-                textArea.value = script;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-            });
+            document.getElementById('debugInfo').textContent = debugInfo;
         }
 
         // 💾 حفظ البيانات
         function saveData() {
-            localStorage.setItem('robloxPlayers', JSON.stringify(allowedPlayers));
+            try {
+                localStorage.setItem('robloxPlayers', JSON.stringify(window.allowedPlayers));
+                console.log('تم حفظ البيانات:', window.allowedPlayers);
+            } catch (e) {
+                console.error('خطأ في حفظ البيانات:', e);
+            }
         }
 
         // 📥 تحميل البيانات
         function loadData() {
-            const saved = localStorage.getItem('robloxPlayers');
-            if (saved) {
-                try {
-                    allowedPlayers = JSON.parse(saved);
-                } catch (e) {
-                    allowedPlayers = [];
+            try {
+                const saved = localStorage.getItem('robloxPlayers');
+                if (saved) {
+                    window.allowedPlayers = JSON.parse(saved);
+                    console.log('تم تحميل البيانات:', window.allowedPlayers);
+                } else {
+                    console.log('لا توجد بيانات محفوظة');
                 }
+            } catch (e) {
+                console.error('خطأ في تحميل البيانات:', e);
+                window.allowedPlayers = [];
             }
             updateDisplay();
         }
@@ -461,7 +459,15 @@ print("🚀 نظام الأذونات جاهز - " .. #allowedPlayers .. " لا�
         });
 
         // 🚀 تهيئة الصفحة
+        console.log('🚀 بدء تهيئة الموقع...');
         loadData();
+        
+        // اختبار دوري للتأكد من عمل النظام
+        setInterval(function() {
+            console.log('📊 فحص دوري - عدد اللاعبين:', window.allowedPlayers.length);
+        }, 30000); // كل 30 ثانية
+
+        console.log('✅ الموقع جاهز!');
     </script>
 </body>
 </html>
