@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مدير قائمة لاعبي Roblox</title>
+    <title>مدير قائمة Roblox Whitelist</title>
     <style>
         * {
             margin: 0;
@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 1000px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -49,6 +49,48 @@
             padding: 40px;
         }
 
+        .api-info {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .api-info h3 {
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .api-url {
+            background: rgba(255,255,255,0.15);
+            padding: 15px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+            margin: 15px 0;
+            border: 2px dashed rgba(255,255,255,0.3);
+            font-size: 0.9rem;
+        }
+
+        .copy-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
         .add-section {
             background: #f8fafc;
             padding: 30px;
@@ -71,7 +113,7 @@
 
         .input-field {
             flex: 1;
-            min-width: 200px;
+            min-width: 250px;
             padding: 15px;
             border: 2px solid #e2e8f0;
             border-radius: 10px;
@@ -109,9 +151,9 @@
         .btn-danger {
             background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
             color: white;
-            padding: 8px 16px;
+            padding: 10px 20px;
             font-size: 0.9rem;
-            min-width: 80px;
+            min-width: 90px;
         }
 
         .btn-danger:hover {
@@ -119,10 +161,21 @@
             box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
         }
 
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+        }
+
         .players-section {
             background: white;
             border-radius: 15px;
             border: 2px solid #e2e8f0;
+            margin-bottom: 30px;
         }
 
         .players-header {
@@ -132,6 +185,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .players-header h2 {
@@ -142,8 +197,8 @@
         .counter {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
+            padding: 10px 20px;
+            border-radius: 25px;
             font-weight: 600;
         }
 
@@ -180,12 +235,6 @@
             text-align: center;
             padding: 60px 20px;
             color: #718096;
-        }
-
-        .empty-state i {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            opacity: 0.5;
         }
 
         .alert {
@@ -235,67 +284,53 @@
         .stat-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 20px;
+            padding: 25px;
             border-radius: 15px;
             text-align: center;
         }
 
         .stat-number {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
-        .api-section {
-            background: #f0f8ff;
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .json-section {
+            background: #f8f9fa;
             padding: 25px;
             border-radius: 15px;
-            margin: 25px 0;
-            border: 2px solid #4facfe;
+            border: 2px solid #e2e8f0;
+            margin: 20px 0;
         }
 
-        .api-section h3 {
+        .json-section h3 {
             color: #2d3748;
             margin-bottom: 15px;
         }
 
-        .api-url {
-            background: #ffffff;
-            padding: 15px;
-            border-radius: 10px;
-            border: 1px solid #e2e8f0;
-            font-family: 'Courier New', monospace;
-            word-break: break-all;
-            margin: 10px 0;
-        }
-
-        .copy-btn {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-
-        .copy-btn:hover {
-            background: #218838;
-        }
-
         .json-preview {
-            background: #f8f9fa;
+            background: #1a202c;
+            color: #e2e8f0;
             padding: 20px;
             border-radius: 10px;
-            border: 1px solid #e2e8f0;
-            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            font-size: 0.9rem;
+            line-height: 1.4;
         }
 
-        .json-preview pre {
-            margin: 0;
-            white-space: pre-wrap;
-            font-family: 'Courier New', monospace;
-            color: #495057;
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
         }
 
         @media (max-width: 768px) {
@@ -320,69 +355,134 @@
             .stats {
                 grid-template-columns: 1fr;
             }
+
+            .players-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .actions {
+                justify-content: center;
+            }
         }
 
-        /* Scrollbar styling */
-        .players-list::-webkit-scrollbar {
+        /* Custom scrollbar */
+        .players-list::-webkit-scrollbar,
+        .json-preview::-webkit-scrollbar {
             width: 8px;
         }
 
-        .players-list::-webkit-scrollbar-track {
+        .players-list::-webkit-scrollbar-track,
+        .json-preview::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 10px;
         }
 
-        .players-list::-webkit-scrollbar-thumb {
+        .players-list::-webkit-scrollbar-thumb,
+        .json-preview::-webkit-scrollbar-thumb {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             border-radius: 10px;
         }
 
-        .players-list::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, #3d8bfe 0%, #00d4fe 100%);
+        .quick-add {
+            background: #edf2f7;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .quick-add h4 {
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .quick-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .quick-btn {
+            background: #e2e8f0;
+            color: #2d3748;
+            border: 2px solid #cbd5e0;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .quick-btn:hover {
+            background: #cbd5e0;
+            border-color: #a0aec0;
         }
     </style>
 </head>
 <body>
+    <!-- Handle JSON API mode -->
+    <script>
+        // Check if we're in API mode first
+        if (window.location.hash === '#api' || window.location.pathname.endsWith('/api')) {
+            // Load data from localStorage
+            const savedPlayers = localStorage.getItem('robloxWhitelist');
+            const savedDate = localStorage.getItem('robloxWhitelistDate');
+            
+            const players = savedPlayers ? JSON.parse(savedPlayers) : [];
+            const lastUpdated = savedDate ? savedDate : new Date().toISOString();
+            
+            const jsonData = {
+                players: players,
+                totalPlayers: players.length,
+                lastUpdated: lastUpdated,
+                allowedOnly: true,
+                version: "1.0",
+                status: "active"
+            };
+            
+            document.body.innerHTML = `<pre style="font-family: monospace; padding: 20px; background: #f8f9fa; margin: 0;">${JSON.stringify(jsonData, null, 2)}</pre>`;
+            
+            // Set content type header (won't work in browser but good practice)
+            document.documentElement.setAttribute('data-content-type', 'application/json');
+        }
+    </script>
+
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>🎮 مدير قائمة لاعبي Roblox</h1>
-            <p>إدارة اللاعبين المسموح لهم بدخول ماب اللعبة</p>
+            <h1>🎮 مدير قائمة Roblox Whitelist</h1>
+            <p>إدارة متقدمة مع تحديث تلقائي وAPI مدمج</p>
         </div>
 
         <div class="content">
             <!-- Alert Area -->
             <div id="alertArea"></div>
 
+            <!-- API Info Section -->
+            <div class="api-info">
+                <h3>🔗 API للاستخدام في Roblox</h3>
+                <p>استخدم هذا الرابط في سكريپت Roblox لقراءة القائمة تلقائياً:</p>
+                <div class="api-url" id="apiUrlDisplay">
+                    https://re5gw.github.io/roblox-player-manager2/#api
+                </div>
+                <button class="copy-btn" onclick="copyApiUrl()">📋 نسخ رابط API</button>
+                <button class="copy-btn" onclick="testApi()">🧪 اختبار API</button>
+                <button class="copy-btn" onclick="generateRobloxScript()">⚡ إنشاء سكريپت Roblox</button>
+            </div>
+
             <!-- Stats Section -->
             <div class="stats">
                 <div class="stat-card">
                     <div class="stat-number" id="playerCount">0</div>
-                    <div>إجمالي اللاعبين</div>
+                    <div class="stat-label">إجمالي اللاعبين</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="todayAdded">0</div>
+                    <div class="stat-label">مُضاف اليوم</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="lastUpdated">---</div>
-                    <div>آخر تحديث</div>
-                </div>
-            </div>
-
-            <!-- API Section -->
-            <div class="api-section">
-                <h3>🔗 رابط API للاستخدام في Roblox</h3>
-                <p>استخدم هذا الرابط في سكريپت Roblox للحصول على قائمة اللاعبين:</p>
-                <div class="api-url">
-                    <span id="apiUrl">https://re5gw.github.io/roblox-player-manager2/api/whitelist</span>
-                    <button class="copy-btn" onclick="copyApiUrl()">نسخ</button>
-                </div>
-                
-                <h4>📄 معاينة JSON الحالي:</h4>
-                <div class="json-preview">
-                    <pre id="jsonPreview">{
-  "players": [],
-  "totalPlayers": 0,
-  "lastUpdated": "2025-07-19T12:00:00.000Z",
-  "allowedOnly": true
-}</pre>
+                    <div class="stat-label">آخر تحديث</div>
                 </div>
             </div>
 
@@ -394,12 +494,23 @@
                         type="text" 
                         id="playerInput" 
                         class="input-field" 
-                        placeholder="أدخل اسم اللاعب في Roblox..."
+                        placeholder="أدخل اسم اللاعب في Roblox (بدون مسافات أو رموز خاصة)..."
                         maxlength="20"
                     >
                     <button class="btn btn-primary" onclick="addPlayer()">
                         إضافة لاعب
                     </button>
+                </div>
+                
+                <!-- Quick Add Section -->
+                <div class="quick-add">
+                    <h4>⚡ إضافة سريعة (أمثلة):</h4>
+                    <div class="quick-buttons">
+                        <button class="quick-btn" onclick="quickAdd('Player1')">Player1</button>
+                        <button class="quick-btn" onclick="quickAdd('TestUser')">TestUser</button>
+                        <button class="quick-btn" onclick="quickAdd('Friend123')">Friend123</button>
+                        <button class="quick-btn" onclick="clearQuickAdd()">مسح الأمثلة</button>
+                    </div>
                 </div>
             </div>
 
@@ -417,6 +528,23 @@
                     </div>
                 </div>
             </div>
+
+            <!-- JSON Section -->
+            <div class="json-section">
+                <h3>📄 معاينة JSON للمطورين</h3>
+                <div class="json-preview" id="jsonPreview">{
+  "players": [],
+  "totalPlayers": 0,
+  "lastUpdated": "2025-07-19T12:00:00.000Z",
+  "allowedOnly": true,
+  "version": "1.0"
+}</div>
+                <div class="actions">
+                    <button class="btn btn-success" onclick="downloadJson()">⬇️ تحميل JSON</button>
+                    <button class="copy-btn" onclick="copyJson()">📋 نسخ JSON</button>
+                    <button class="copy-btn" onclick="refreshData()">🔄 تحديث البيانات</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -424,12 +552,20 @@
         // Player management system
         let players = [];
         let lastUpdated = new Date();
+        let todayAddedCount = 0;
 
         // Load players from localStorage on page load
         window.onload = function() {
+            // Skip if in API mode
+            if (window.location.hash === '#api' || window.location.pathname.endsWith('/api')) {
+                return;
+            }
+            
             loadPlayers();
             updateDisplay();
-            setupApiEndpoint();
+            
+            // Auto-save every 10 seconds
+            setInterval(saveData, 10000);
         };
 
         // Load players from localStorage
@@ -443,16 +579,26 @@
             if (savedDate) {
                 lastUpdated = new Date(savedDate);
             }
+
+            const savedTodayCount = localStorage.getItem('todayAddedCount');
+            const savedCountDate = localStorage.getItem('todayCountDate');
+            const today = new Date().toDateString();
+            
+            if (savedCountDate === today && savedTodayCount) {
+                todayAddedCount = parseInt(savedTodayCount);
+            } else {
+                todayAddedCount = 0;
+            }
         }
 
-        // Save players and update JSON
-        function savePlayersAndUpdateJSON() {
+        // Save players data
+        function saveData() {
             localStorage.setItem('robloxWhitelist', JSON.stringify(players));
             localStorage.setItem('robloxWhitelistDate', lastUpdated.toISOString());
+            localStorage.setItem('todayAddedCount', todayAddedCount.toString());
+            localStorage.setItem('todayCountDate', new Date().toDateString());
             
             updateDisplay();
-            updateJsonPreview();
-            updateApiEndpoint();
         }
 
         // Add new player
@@ -465,8 +611,14 @@
                 return;
             }
             
+            // Validation
             if (playerName.length < 3 || playerName.length > 20) {
                 showAlert('اسم اللاعب يجب أن يكون بين 3-20 حرف', 'error');
+                return;
+            }
+
+            if (!/^[a-zA-Z0-9_]+$/.test(playerName)) {
+                showAlert('اسم اللاعب يجب أن يحتوي على أحرف وأرقام فقط (بدون مسافات)', 'error');
                 return;
             }
             
@@ -477,21 +629,42 @@
             
             players.push(playerName);
             lastUpdated = new Date();
-            savePlayersAndUpdateJSON();
+            todayAddedCount++;
+            saveData();
             
             input.value = '';
-            showAlert(`تم إضافة اللاعب "${playerName}" بنجاح!`, 'success');
+            showAlert(`✅ تم إضافة اللاعب "${playerName}" بنجاح!`, 'success');
+        }
+
+        // Quick add function
+        function quickAdd(playerName) {
+            document.getElementById('playerInput').value = playerName;
+            addPlayer();
+        }
+
+        // Clear quick add examples
+        function clearQuickAdd() {
+            const examples = ['Player1', 'TestUser', 'Friend123'];
+            examples.forEach(name => {
+                const index = players.indexOf(name);
+                if (index > -1) {
+                    players.splice(index, 1);
+                }
+            });
+            lastUpdated = new Date();
+            saveData();
+            showAlert('تم مسح الأمثلة', 'success');
         }
 
         // Remove player
         function removePlayer(playerName) {
-            if (confirm(`هل أنت متأكد من حذف اللاعب "${playerName}" من القائمة؟`)) {
+            if (confirm(`هل أنت متأكد من حذف اللاعب "${playerName}" من القائمة؟\n\nسيتم منعه من دخول السيرفر فوراً.`)) {
                 const index = players.indexOf(playerName);
                 if (index > -1) {
                     players.splice(index, 1);
                     lastUpdated = new Date();
-                    savePlayersAndUpdateJSON();
-                    showAlert(`تم حذف اللاعب "${playerName}" من القائمة!`, 'success');
+                    saveData();
+                    showAlert(`🗑️ تم حذف اللاعب "${playerName}" من القائمة!`, 'success');
                 }
             }
         }
@@ -500,6 +673,7 @@
         function updateDisplay() {
             updatePlayersList();
             updateStats();
+            updateJsonPreview();
         }
 
         // Update players list display
@@ -526,7 +700,7 @@
                     <div class="player-item">
                         <div class="player-name">👤 ${player}</div>
                         <button class="btn btn-danger" onclick="removePlayer('${player}')">
-                            حذف
+                            🗑️ حذف
                         </button>
                     </div>
                 `;
@@ -538,7 +712,8 @@
         // Update statistics
         function updateStats() {
             document.getElementById('playerCount').textContent = players.length;
-            document.getElementById('lastUpdated').textContent = lastUpdated.toLocaleDateString('ar');
+            document.getElementById('todayAdded').textContent = todayAddedCount;
+            document.getElementById('lastUpdated').textContent = lastUpdated.toLocaleTimeString('ar', {hour: '2-digit', minute: '2-digit'});
         }
 
         // Update JSON preview
@@ -548,46 +723,119 @@
                 totalPlayers: players.length,
                 lastUpdated: lastUpdated.toISOString(),
                 allowedOnly: true,
-                version: "1.0"
+                version: "1.0",
+                status: "active"
             };
             
             document.getElementById('jsonPreview').textContent = JSON.stringify(jsonData, null, 2);
         }
 
-        // Setup API endpoint (simulated)
-        function setupApiEndpoint() {
-            // Create a virtual API endpoint using URL hash
-            if (window.location.hash === '#api/whitelist' || window.location.pathname.includes('/api/whitelist')) {
-                const jsonData = {
-                    players: players,
-                    totalPlayers: players.length,
-                    lastUpdated: lastUpdated.toISOString(),
-                    allowedOnly: true,
-                    version: "1.0"
-                };
-                
-                document.body.innerHTML = `<pre>${JSON.stringify(jsonData, null, 2)}</pre>`;
-                document.body.style.fontFamily = 'monospace';
-                document.body.style.padding = '20px';
-                document.body.style.background = '#f8f9fa';
-                return;
-            }
-        }
-
-        // Update API endpoint data
-        function updateApiEndpoint() {
-            // This would update the virtual endpoint
-            setupApiEndpoint();
-        }
-
-        // Copy API URL to clipboard
+        // Copy API URL
         function copyApiUrl() {
-            const apiUrl = document.getElementById('apiUrl').textContent;
-            navigator.clipboard.writeText(apiUrl).then(() => {
-                showAlert('تم نسخ رابط API بنجاح!', 'success');
+            const url = window.location.origin + window.location.pathname + "#api";
+            navigator.clipboard.writeText(url).then(() => {
+                showAlert('📋 تم نسخ رابط API بنجاح!', 'success');
             }).catch(() => {
-                showAlert('فشل في نسخ الرابط', 'error');
+                showAlert('❌ فشل في نسخ الرابط', 'error');
             });
+        }
+
+        // Test API
+        function testApi() {
+            const url = window.location.origin + window.location.pathname + "#api";
+            window.open(url, '_blank');
+        }
+
+        // Generate Roblox script
+        function generateRobloxScript() {
+            const apiUrl = window.location.origin + window.location.pathname + "#api";
+            const script = `-- Auto-generated Roblox Whitelist Script
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
+
+local API_URL = "${apiUrl}"
+local allowedPlayers = {}
+
+local function loadWhitelist()
+    local success, response = pcall(function()
+        return HttpService:GetAsync(API_URL)
+    end)
+    
+    if success then
+        local data = HttpService:JSONDecode(response)
+        allowedPlayers = {}
+        for _, name in pairs(data.players) do
+            allowedPlayers[name:lower()] = true
+        end
+        print("[Whitelist] Loaded", #data.players, "players")
+        return true
+    end
+    return false
+end
+
+local function onPlayerJoined(player)
+    wait(2)
+    if allowedPlayers[player.Name:lower()] then
+        print("[Whitelist] ✅ Allowed:", player.Name)
+    else
+        print("[Whitelist] ❌ Kicked:", player.Name)
+        player:Kick("You are not whitelisted!")
+    end
+end
+
+-- Initialize
+if HttpService.HttpEnabled then
+    loadWhitelist()
+    Players.PlayerAdded:Connect(onPlayerJoined)
+    
+    -- Auto-reload every minute
+    spawn(function()
+        while true do
+            wait(60)
+            loadWhitelist()
+        end
+    end)
+else
+    error("Enable HttpService in Game Settings!")
+end`;
+
+            navigator.clipboard.writeText(script).then(() => {
+                showAlert('🚀 تم نسخ سكريپت Roblox! الصقه في ServerScriptService', 'success');
+            });
+        }
+
+        // Copy JSON
+        function copyJson() {
+            const jsonText = document.getElementById('jsonPreview').textContent;
+            navigator.clipboard.writeText(jsonText).then(() => {
+                showAlert('📋 تم نسخ JSON بنجاح!', 'success');
+            }).catch(() => {
+                showAlert('❌ فشل في النسخ', 'error');
+            });
+        }
+
+        // Download JSON file
+        function downloadJson() {
+            const jsonText = document.getElementById('jsonPreview').textContent;
+            const blob = new Blob([jsonText], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'roblox-whitelist.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            URL.revokeObjectURL(url);
+            showAlert('⬇️ تم تحميل ملف JSON!', 'success');
+        }
+
+        // Refresh data
+        function refreshData() {
+            lastUpdated = new Date();
+            saveData();
+            showAlert('🔄 تم تحديث البيانات!', 'success');
         }
 
         // Show alert message
@@ -615,15 +863,12 @@
             }
         });
 
-        // Auto-save every 30 seconds
-        setInterval(function() {
-            if (players.length > 0) {
-                savePlayersAndUpdateJSON();
+        // Handle hash changes for API
+        window.addEventListener('hashchange', function() {
+            if (window.location.hash === '#api') {
+                location.reload();
             }
-        }, 30000);
-
-        // Handle API requests
-        window.addEventListener('hashchange', setupApiEndpoint);
+        });
     </script>
 </body>
 </html>
