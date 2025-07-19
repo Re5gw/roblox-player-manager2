@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مدير أذونات اللاعبين - Roblox</title>
+    <title>مدير أذونات Roblox</title>
     <style>
         * {
             margin: 0;
@@ -19,17 +19,17 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
+            background: white;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             overflow: hidden;
         }
 
         .header {
             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            padding: 30px;
+            padding: 40px;
             text-align: center;
             color: white;
         }
@@ -37,7 +37,6 @@
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .content {
@@ -45,25 +44,23 @@
         }
 
         .stats {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #f8f9fa;
             padding: 20px;
             border-radius: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             text-align: center;
         }
 
-        .stats h3 {
-            font-size: 1.8rem;
+        .stats h2 {
+            color: #333;
             margin-bottom: 10px;
         }
 
-        .input-section {
-            background: #f8f9ff;
+        .add-section {
+            background: #e8f5e8;
             padding: 25px;
             border-radius: 15px;
             margin-bottom: 30px;
-            border: 2px solid #e1e8ff;
         }
 
         .input-group {
@@ -72,69 +69,64 @@
             margin-bottom: 15px;
         }
 
-        input[type="text"], textarea {
+        input[type="text"] {
             flex: 1;
-            padding: 12px 15px;
+            padding: 15px;
             border: 2px solid #ddd;
             border-radius: 10px;
             font-size: 16px;
-            transition: all 0.3s ease;
         }
 
-        input[type="text"]:focus, textarea:focus {
+        input[type="text"]:focus {
             outline: none;
             border-color: #4facfe;
-            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
         }
 
         .btn {
-            padding: 12px 25px;
+            padding: 15px 25px;
             border: none;
             border-radius: 10px;
-            cursor: pointer;
             font-size: 16px;
             font-weight: bold;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
         .btn-add {
-            background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%);
+            background: #28a745;
             color: white;
         }
 
-        .btn-check {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ffa8a8 100%);
-            color: white;
+        .btn-add:hover {
+            background: #218838;
+            transform: translateY(-2px);
         }
 
         .btn-export {
-            background: linear-gradient(135deg, #ff9500 0%, #ffad33 100%);
+            background: #007bff;
             color: white;
             width: 100%;
-            margin-top: 15px;
+            margin-top: 20px;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        .btn-export:hover {
+            background: #0056b3;
         }
 
         .players-list {
-            background: #fff;
+            background: white;
+            border: 2px solid #eee;
             border-radius: 15px;
-            border: 2px solid #e1e8ff;
             max-height: 400px;
             overflow-y: auto;
         }
 
-        .players-list h3 {
-            background: #f0f4ff;
+        .list-header {
+            background: #f8f9fa;
             padding: 20px;
-            margin: 0;
+            border-bottom: 2px solid #eee;
+            font-weight: bold;
             color: #333;
-            border-bottom: 2px solid #e1e8ff;
         }
 
         .player-item {
@@ -143,48 +135,51 @@
             align-items: center;
             padding: 15px 20px;
             border-bottom: 1px solid #eee;
-            transition: all 0.3s ease;
-        }
-
-        .player-item:hover {
-            background: #f8f9ff;
         }
 
         .player-name {
             font-weight: bold;
             color: #333;
-            font-size: 16px;
         }
 
         .btn-remove {
-            background: linear-gradient(135deg, #ff4757 0%, #ff6b7d 100%);
+            background: #dc3545;
             color: white;
             border: none;
             padding: 8px 15px;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 14px;
         }
 
-        .status-message {
+        .btn-remove:hover {
+            background: #c82333;
+        }
+
+        .empty-message {
+            padding: 40px;
+            text-align: center;
+            color: #666;
+            font-style: italic;
+        }
+
+        .alert {
             padding: 15px;
+            margin: 15px 0;
             border-radius: 10px;
-            margin: 10px 0;
             font-weight: bold;
             text-align: center;
-            transition: all 0.3s ease;
         }
 
-        .status-allowed {
-            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        .alert-success {
+            background: #d4edda;
             color: #155724;
-            border: 2px solid #c3e6cb;
+            border: 1px solid #c3e6cb;
         }
 
-        .status-denied {
-            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        .alert-danger {
+            background: #f8d7da;
             color: #721c24;
-            border: 2px solid #f5c6cb;
+            border: 1px solid #f5c6cb;
         }
 
         .code-section {
@@ -192,9 +187,8 @@
             color: #e2e8f0;
             padding: 20px;
             border-radius: 15px;
-            margin: 20px 0;
+            margin-top: 30px;
             font-family: 'Courier New', monospace;
-            overflow-x: auto;
         }
 
         .copy-btn {
@@ -207,33 +201,16 @@
             margin-top: 10px;
         }
 
-        .instruction-box {
-            background: #fff3cd;
-            border: 2px solid #ffeaa7;
-            padding: 20px;
-            border-radius: 15px;
-            margin: 20px 0;
-        }
-
-        .step {
-            background: white;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 10px;
-            border-left: 4px solid #4facfe;
+        .api-data {
+            display: none;
         }
 
         @media (max-width: 600px) {
             .input-group {
                 flex-direction: column;
             }
-            
             .content {
                 padding: 20px;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
             }
         }
     </style>
@@ -241,329 +218,212 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎮 مدير أذونات اللاعبين</h1>
-            <p>إدارة شاملة للاعبين المسموح لهم بدخول خوادم Roblox</p>
+            <h1>🎮 مدير أذونات Roblox</h1>
+            <p>إدارة بسيطة وفعالة للاعبين المسموح لهم</p>
         </div>
-        
+
         <div class="content">
             <div class="stats">
-                <h3 id="playerCount">عدد اللاعبين المسموح لهم: 0</h3>
-                <p>آخر تحديث: <span id="lastUpdate">--:--</span></p>
+                <h2 id="playerCount">0 لاعب مسموح</h2>
+                <p>آخر تحديث: <span id="lastUpdate">الآن</span></p>
             </div>
 
-            <div class="input-section">
-                <h3 style="margin-bottom: 20px; color: #333;">➕ إضافة لاعبين</h3>
+            <div class="add-section">
+                <h3 style="margin-bottom: 20px; color: #333;">➕ إضافة لاعب جديد</h3>
                 
                 <div class="input-group">
-                    <input type="text" id="playerNameInput" placeholder="اكتب اسم اللاعب..." maxlength="50">
+                    <input type="text" id="playerInput" placeholder="اكتب اسم اللاعب..." maxlength="20">
                     <button class="btn btn-add" onclick="addPlayer()">إضافة</button>
                 </div>
-                
-                <h4 style="margin: 15px 0; color: #333;">إضافة متعددة (كل اسم في سطر منفصل):</h4>
-                <textarea id="multiplePlayersInput" placeholder="اسم_اللاعب1&#10;اسم_اللاعب2&#10;اسم_اللاعب3" rows="4"></textarea>
-                <button class="btn btn-add" style="width: 100%; margin-top: 10px;" onclick="addMultiplePlayers()">إضافة متعددة</button>
-                
-                <h3 style="margin: 20px 0; color: #333;">🔍 التحقق من الأذونات</h3>
-                <div class="input-group">
-                    <input type="text" id="checkNameInput" placeholder="اكتب اسم اللاعب للتحقق..." maxlength="50">
-                    <button class="btn btn-check" onclick="checkPlayerAccess()">فحص الأذونات</button>
-                </div>
-                
-                <div id="statusMessage"></div>
+
+                <div id="alertMessage"></div>
             </div>
 
             <div class="players-list">
-                <h3>👥 قائمة اللاعبين المسموح لهم (<span id="listCount">0</span>)</h3>
+                <div class="list-header">
+                    👥 قائمة اللاعبين المسموح لهم (<span id="listCount">0</span>)
+                </div>
                 <div id="playersList">
-                    <div style="padding: 40px; text-align: center; color: #666; font-style: italic;">
-                        لا يوجد لاعبين في القائمة حالياً<br>
-                        قم بإضافة لاعبين لبدء إدارة الأذونات
+                    <div class="empty-message">
+                        لا يوجد لاعبين في القائمة<br>
+                        أضف بعض الأسماء للبدء
                     </div>
                 </div>
             </div>
 
-            <button class="btn btn-export" onclick="generateRobloxScript()">
+            <button class="btn btn-export" onclick="exportScript()">
                 📋 تصدير سكريپت Roblox
             </button>
 
-            <div class="instruction-box">
-                <h4>📚 كيفية استخدام السكريپت في Roblox:</h4>
-                <div class="step">
-                    <strong>1.</strong> أضف أسماء اللاعبين أعلاه
-                </div>
-                <div class="step">
-                    <strong>2.</strong> اضغط "تصدير سكريپت Roblox"
-                </div>
-                <div class="step">
-                    <strong>3.</strong> افتح Roblox Studio
-                </div>
-                <div class="step">
-                    <strong>4.</strong> أنشئ ServerScript جديد في ServerScriptService
-                </div>
-                <div class="step">
-                    <strong>5.</strong> الصق السكريپت المنسوخ
-                </div>
-                <div class="step">
-                    <strong>6.</strong> احفظ وشغل الخادم - النظام سيعمل تلقائياً!
-                </div>
-            </div>
-
             <div class="code-section">
-                <h4>🔗 سكريپت Roblox (محدث تلقائياً):</h4>
-                <pre id="robloxCode">-- أضف لاعبين أولاً لرؤية السكريپت</pre>
-                <button class="copy-btn" onclick="copyRobloxScript()">📋 نسخ السكريپت</button>
+                <h4>📝 سكريپت Roblox (جاهز للنسخ):</h4>
+                <pre id="scriptOutput">-- أضف لاعبين أولاً لرؤية السكريپت</pre>
+                <button class="copy-btn" onclick="copyScript()">📋 نسخ السكريپت</button>
             </div>
         </div>
     </div>
 
+    <!-- بيانات API مخفية للوصول من Roblox -->
+    <div id="apiData" class="api-data">
+        <div id="playersJson">[]</div>
+    </div>
+
     <script>
+        // 📋 قائمة اللاعبين المسموح لهم
         let allowedPlayers = [];
 
-        function updateStats() {
-            document.getElementById('playerCount').textContent = `عدد اللاعبين المسموح لهم: ${allowedPlayers.length}`;
+        // 🔄 تحديث العرض
+        function updateDisplay() {
+            // تحديث الإحصائيات
+            document.getElementById('playerCount').textContent = `${allowedPlayers.length} لاعب مسموح`;
             document.getElementById('listCount').textContent = allowedPlayers.length;
             
+            // تحديث الوقت
             const now = new Date();
             document.getElementById('lastUpdate').textContent = 
                 now.getHours().toString().padStart(2, '0') + ':' + 
                 now.getMinutes().toString().padStart(2, '0');
-        }
 
-        function updatePlayersList() {
-            const playersListElement = document.getElementById('playersList');
+            // تحديث قائمة اللاعبين
+            const playersList = document.getElementById('playersList');
             
             if (allowedPlayers.length === 0) {
-                playersListElement.innerHTML = `
-                    <div style="padding: 40px; text-align: center; color: #666; font-style: italic;">
-                        لا يوجد لاعبين في القائمة حالياً<br>
-                        قم بإضافة لاعبين لبدء إدارة الأذونات
+                playersList.innerHTML = `
+                    <div class="empty-message">
+                        لا يوجد لاعبين في القائمة<br>
+                        أضف بعض الأسماء للبدء
                     </div>
                 `;
-                updateStats();
-                return;
-            }
-
-            playersListElement.innerHTML = allowedPlayers
-                .map(player => `
-                    <div class="player-item">
-                        <span class="player-name">🎮 ${player}</span>
-                        <button class="btn-remove" onclick="removePlayer('${player}')">
-                            ❌ حذف
-                        </button>
-                    </div>
-                `).join('');
-            
-            updateStats();
-            updateRobloxScript();
-        }
-
-        function addPlayer() {
-            const input = document.getElementById('playerNameInput');
-            const playerName = input.value.trim();
-            
-            if (!playerName) {
-                showStatus('الرجاء كتابة اسم اللاعب', 'denied');
-                return;
-            }
-            
-            if (playerName.length < 2) {
-                showStatus('اسم اللاعب يجب أن يكون أطول من حرف واحد', 'denied');
-                return;
-            }
-            
-            if (allowedPlayers.includes(playerName)) {
-                showStatus(`اللاعب "${playerName}" موجود بالفعل في القائمة`, 'denied');
-                return;
-            }
-            
-            allowedPlayers.push(playerName);
-            allowedPlayers.sort();
-            updatePlayersList();
-            input.value = '';
-            showStatus(`تم إضافة اللاعب "${playerName}" بنجاح! ✅`, 'allowed');
-        }
-
-        function addMultiplePlayers() {
-            const input = document.getElementById('multiplePlayersInput');
-            const playersText = input.value.trim();
-            
-            if (!playersText) {
-                showStatus('الرجاء كتابة أسماء اللاعبين', 'denied');
-                return;
-            }
-            
-            const newPlayers = playersText.split('\n')
-                .map(name => name.trim())
-                .filter(name => name.length > 1)
-                .filter(name => !allowedPlayers.includes(name));
-            
-            if (newPlayers.length === 0) {
-                showStatus('لا توجد أسماء صالحة لإضافتها', 'denied');
-                return;
-            }
-            
-            allowedPlayers.push(...newPlayers);
-            allowedPlayers.sort();
-            updatePlayersList();
-            input.value = '';
-            showStatus(`تم إضافة ${newPlayers.length} لاعب بنجاح ✅`, 'allowed');
-        }
-
-        function removePlayer(playerName) {
-            if (confirm(`هل أنت متأكد من حذف اللاعب "${playerName}"؟`)) {
-                allowedPlayers = allowedPlayers.filter(player => player !== playerName);
-                updatePlayersList();
-                showStatus(`تم حذف اللاعب "${playerName}" من القائمة`, 'denied');
-            }
-        }
-
-        function checkPlayerAccess() {
-            const input = document.getElementById('checkNameInput');
-            const playerName = input.value.trim();
-            
-            if (!playerName) {
-                showStatus('الرجاء كتابة اسم اللاعب للتحقق', 'denied');
-                return;
-            }
-            
-            if (allowedPlayers.includes(playerName)) {
-                showStatus(`✅ اللاعب "${playerName}" مسموح له بدخول الخادم`, 'allowed');
             } else {
-                showStatus(`❌ اللاعب "${playerName}" غير مسموح له بدخول الخادم`, 'denied');
+                playersList.innerHTML = allowedPlayers
+                    .map(player => `
+                        <div class="player-item">
+                            <span class="player-name">🎮 ${player}</span>
+                            <button class="btn-remove" onclick="removePlayer('${player}')">
+                                ❌ حذف
+                            </button>
+                        </div>
+                    `).join('');
             }
+
+            // تحديث بيانات API
+            document.getElementById('playersJson').textContent = JSON.stringify(allowedPlayers);
             
-            input.value = '';
+            // تحديث السكريپت
+            updateScript();
+            
+            // حفظ البيانات
+            saveData();
         }
 
-        function showStatus(message, type) {
-            const statusElement = document.getElementById('statusMessage');
-            statusElement.innerHTML = message;
-            statusElement.className = `status-message status-${type}`;
+        // ➕ إضافة لاعب
+        function addPlayer() {
+            const input = document.getElementById('playerInput');
+            const playerName = input.value.trim();
+
+            // التحقق من صحة الاسم
+            if (!playerName) {
+                showAlert('الرجاء كتابة اسم اللاعب', 'danger');
+                return;
+            }
+
+            if (playerName.length < 3) {
+                showAlert('اسم اللاعب يجب أن يكون 3 أحرف على الأقل', 'danger');
+                return;
+            }
+
+            if (allowedPlayers.includes(playerName)) {
+                showAlert(`اللاعب "${playerName}" موجود بالفعل`, 'danger');
+                return;
+            }
+
+            // إضافة اللاعب
+            allowedPlayers.push(playerName);
+            allowedPlayers.sort(); // ترتيب أبجدي
+            input.value = '';
+            
+            showAlert(`تم إضافة "${playerName}" بنجاح ✅`, 'success');
+            updateDisplay();
+        }
+
+        // ❌ حذف لاعب
+        function removePlayer(playerName) {
+            if (confirm(`هل تريد حذف "${playerName}"؟`)) {
+                allowedPlayers = allowedPlayers.filter(p => p !== playerName);
+                showAlert(`تم حذف "${playerName}"`, 'danger');
+                updateDisplay();
+            }
+        }
+
+        // 💬 عرض رسالة
+        function showAlert(message, type) {
+            const alertDiv = document.getElementById('alertMessage');
+            alertDiv.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
             
             setTimeout(() => {
-                statusElement.innerHTML = '';
-                statusElement.className = '';
-            }, 5000);
+                alertDiv.innerHTML = '';
+            }, 3000);
         }
 
-        function updateRobloxScript() {
-            const luaArray = allowedPlayers.map(player => `    "${player}"`).join(',\n');
+        // 🔄 تحديث السكريپت
+        function updateScript() {
+            const playersArray = allowedPlayers.map(p => `"${p}"`).join(', ');
             
             const script = allowedPlayers.length > 0 ? 
-`-- 🎮 سكريپت نظام أذونات اللاعبين
--- تم إنشاؤه بواسطة مدير الأذونات
--- عدد اللاعبين المسموح لهم: ${allowedPlayers.length}
+`-- 🎮 سكريپت أذونات اللاعبين
+-- تم إنشاؤه تلقائياً من الموقع
 
 local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
--- قائمة اللاعبين المسموح لهم بدخول الخادم
-local allowedPlayers = {
-${luaArray}
-}
+-- 📋 قائمة اللاعبين المسموح لهم (${allowedPlayers.length} لاعب)
+local allowedPlayers = {${playersArray}}
 
--- دالة للتحقق من أذونات اللاعب
-local function isPlayerAllowed(playerName)
-    for _, allowedPlayer in pairs(allowedPlayers) do
-        if allowedPlayer == playerName then
+-- ✅ التحقق من وجود اللاعب في القائمة
+local function isAllowed(playerName)
+    for _, name in pairs(allowedPlayers) do
+        if name == playerName then
             return true
         end
     end
     return false
 end
 
--- دالة لإرسال رسالة ترحيب للاعب المسموح له
-local function welcomeAuthorizedPlayer(player)
-    wait(2) -- انتظار حتى يتم تحميل اللاعب بالكامل
-    
-    print("✅ مرحباً " .. player.Name .. "! تم التحقق من أذوناتك بنجاح")
-    
-    -- يمكنك إضافة GUI ترحيبي هنا إذا أردت
-    -- مثال: إرسال رسالة للاعب
-    local success, error = pcall(function()
-        -- إضافة رسالة ترحيب في الشات
-        game:GetService("StarterGui"):SetCore("ChatMakeSystemMessage", {
-            Text = "مرحباً " .. player.Name .. "! تم التحقق من أذوناتك ✅";
-            Color = Color3.fromRGB(0, 255, 0);
-            Font = Enum.Font.SourceSansBold;
-            FontSize = Enum.FontSize.Size18;
-        })
-    end)
-end
-
--- دالة لطرد اللاعب غير المسموح له
-local function kickUnauthorizedPlayer(player)
-    local kickMessage = "🔒 غير مسموح لك بدخول هذا الخادم!\\n\\n" ..
-                       "📧 تواصل مع إدارة الخادم للحصول على إذن الدخول\\n" ..
-                       "🎮 اسم اللاعب: " .. player.Name
-    
-    player:Kick(kickMessage)
-end
-
--- التحقق عند دخول اللاعب
+-- 🚫 عند دخول لاعب جديد
 Players.PlayerAdded:Connect(function(player)
-    print("🔍 فحص أذونات اللاعب: " .. player.Name)
+    print("🔍 فحص: " .. player.Name)
     
-    if isPlayerAllowed(player.Name) then
-        print("✅ اللاعب " .. player.Name .. " مسموح له بالدخول")
-        welcomeAuthorizedPlayer(player)
+    if isAllowed(player.Name) then
+        print("✅ مسموح: " .. player.Name)
     else
-        print("❌ اللاعب " .. player.Name .. " غير مسموح له بالدخول")
-        wait(1) -- انتظار ثانية واحدة ثم طرده
-        kickUnauthorizedPlayer(player)
+        print("❌ مرفوض: " .. player.Name)
+        wait(1)
+        player:Kick("🔒 غير مسموح لك بدخول هذا الخادم!")
     end
 end)
 
--- طباعة رسالة تأكيد تشغيل النظام
-print("🚀 نظام التحقق من أذونات اللاعبين جاهز!")
-print("📊 عدد اللاعبين المسموح لهم: " .. #allowedPlayers)
-print("🔗 تم إنشاء النظام بواسطة مدير الأذونات")
+print("🚀 نظام الأذونات جاهز - " .. #allowedPlayers .. " لاعب مسموح")`
+: '-- أضف لاعبين أولاً لتوليد السكريپت';
 
--- دالة لإضافة لاعب جديد برمجياً (للمطورين المتقدمين)
-local function addPlayerToWhitelist(playerName)
-    if not isPlayerAllowed(playerName) then
-        table.insert(allowedPlayers, playerName)
-        print("✅ تم إضافة " .. playerName .. " لقائمة اللاعبين المسموح لهم")
-    else
-        print("⚠️ اللاعب " .. playerName .. " موجود بالفعل في القائمة")
-    end
-end
+            document.getElementById('scriptOutput').textContent = script;
+        }
 
--- دالة لحذف لاعب برمجياً (للمطورين المتقدمين)
-local function removePlayerFromWhitelist(playerName)
-    for i, allowedPlayer in pairs(allowedPlayers) do
-        if allowedPlayer == playerName then
-            table.remove(allowedPlayers, i)
-            print("❌ تم حذف " .. playerName .. " من قائمة اللاعبين المسموح لهم")
-            return
-        end
-    end
-    print("⚠️ اللاعب " .. playerName .. " غير موجود في القائمة")
-end
-
--- تصدير الدوال للاستخدام في سكريپتات أخرى (اختياري)
-_G.PlayerPermissions = {
-    isPlayerAllowed = isPlayerAllowed,
-    addPlayer = addPlayerToWhitelist,
-    removePlayer = removePlayerFromWhitelist,
-    getAllowedPlayers = function() return allowedPlayers end
-}` 
-: '-- أضف لاعبين أولاً في الموقع، ثم ارجع هنا لنسخ السكريپت';
+        // 📋 تصدير السكريپت
+        function exportScript() {
+            if (allowedPlayers.length === 0) {
+                showAlert('أضف لاعبين أولاً!', 'danger');
+                return;
+            }
             
-            document.getElementById('robloxCode').textContent = script;
+            copyScript();
+            showAlert('تم نسخ السكريپت! الصقه في Roblox Studio', 'success');
         }
 
-        function generateRobloxScript() {
-            updateRobloxScript();
-            copyRobloxScript();
-            showStatus('تم نسخ سكريپت Roblox بنجاح! 📋 الصقه في ServerScript', 'allowed');
-        }
-
-        function copyRobloxScript() {
-            const script = document.getElementById('robloxCode').textContent;
+        // 📄 نسخ السكريپت
+        function copyScript() {
+            const script = document.getElementById('scriptOutput').textContent;
             
             navigator.clipboard.writeText(script).then(() => {
-                showStatus('تم نسخ السكريپت بنجاح! 📋', 'allowed');
+                console.log('تم نسخ السكريپت');
             }).catch(() => {
                 // للمتصفحات القديمة
                 const textArea = document.createElement('textarea');
@@ -572,49 +432,36 @@ _G.PlayerPermissions = {
                 textArea.select();
                 document.execCommand('copy');
                 document.body.removeChild(textArea);
-                showStatus('تم نسخ السكريپت بنجاح! 📋', 'allowed');
             });
         }
 
-        // إضافة مستمعي الأحداث للإدخال بالضغط على Enter
-        document.getElementById('playerNameInput').addEventListener('keypress', function(e) {
+        // 💾 حفظ البيانات
+        function saveData() {
+            localStorage.setItem('robloxPlayers', JSON.stringify(allowedPlayers));
+        }
+
+        // 📥 تحميل البيانات
+        function loadData() {
+            const saved = localStorage.getItem('robloxPlayers');
+            if (saved) {
+                try {
+                    allowedPlayers = JSON.parse(saved);
+                } catch (e) {
+                    allowedPlayers = [];
+                }
+            }
+            updateDisplay();
+        }
+
+        // ⌨️ إضافة بالضغط على Enter
+        document.getElementById('playerInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 addPlayer();
             }
         });
 
-        document.getElementById('checkNameInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                checkPlayerAccess();
-            }
-        });
-
-        // تهيئة الصفحة عند التحميل
-        updateStats();
-        updateRobloxScript();
-        
-        // حفظ البيانات محلياً (اختياري)
-        function saveData() {
-            localStorage.setItem('allowedPlayers', JSON.stringify(allowedPlayers));
-        }
-        
-        function loadData() {
-            const saved = localStorage.getItem('allowedPlayers');
-            if (saved) {
-                allowedPlayers = JSON.parse(saved);
-                updatePlayersList();
-            }
-        }
-        
-        // تحميل البيانات المحفوظة
+        // 🚀 تهيئة الصفحة
         loadData();
-        
-        // حفظ البيانات عند التغيير
-        const originalUpdatePlayersList = updatePlayersList;
-        updatePlayersList = function() {
-            originalUpdatePlayersList();
-            saveData();
-        };
     </script>
 </body>
 </html>
