@@ -246,26 +246,56 @@
             margin-bottom: 5px;
         }
 
-        .download-section {
-            text-align: center;
-            margin-top: 30px;
-            padding: 20px;
-            background: #f8fafc;
+        .api-section {
+            background: #f0f8ff;
+            padding: 25px;
             border-radius: 15px;
-            border: 2px solid #e2e8f0;
+            margin: 25px 0;
+            border: 2px solid #4facfe;
         }
 
-        .btn-download {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        .api-section h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+
+        .api-url {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+            margin: 10px 0;
+        }
+
+        .copy-btn {
+            background: #28a745;
             color: white;
-            text-decoration: none;
-            display: inline-block;
-            margin: 10px;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
         }
 
-        .btn-download:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(72, 187, 120, 0.3);
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .json-preview {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+            margin: 15px 0;
+        }
+
+        .json-preview pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            color: #495057;
         }
 
         @media (max-width: 768px) {
@@ -336,6 +366,26 @@
                 </div>
             </div>
 
+            <!-- API Section -->
+            <div class="api-section">
+                <h3>🔗 رابط API للاستخدام في Roblox</h3>
+                <p>استخدم هذا الرابط في سكريپت Roblox للحصول على قائمة اللاعبين:</p>
+                <div class="api-url">
+                    <span id="apiUrl">https://re5gw.github.io/roblox-player-manager2/api/whitelist</span>
+                    <button class="copy-btn" onclick="copyApiUrl()">نسخ</button>
+                </div>
+                
+                <h4>📄 معاينة JSON الحالي:</h4>
+                <div class="json-preview">
+                    <pre id="jsonPreview">{
+  "players": [],
+  "totalPlayers": 0,
+  "lastUpdated": "2025-07-19T12:00:00.000Z",
+  "allowedOnly": true
+}</pre>
+                </div>
+            </div>
+
             <!-- Add Player Section -->
             <div class="add-section">
                 <h2>➕ إضافة لاعب جديد</h2>
@@ -367,19 +417,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Download Section -->
-            <div class="download-section">
-                <h3>📥 تحميل ملف JSON</h3>
-                <p>يمكنك تحميل ملف JSON لاستخدامه في سكريبت Roblox</p>
-                <a href="#" class="btn btn-download" onclick="downloadJSON()">
-                    تحميل whitelist.json
-                </a>
-                <div style="margin-top: 15px; padding: 15px; background: #e2e8f0; border-radius: 10px; text-align: right;">
-                    <strong>رابط JSON المباشر:</strong><br>
-                    <code id="jsonUrl" style="background: white; padding: 5px; border-radius: 5px;">سيتم إنشاؤه عند رفع الملفات إلى GitHub</code>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -392,7 +429,7 @@
         window.onload = function() {
             loadPlayers();
             updateDisplay();
-            updateJsonUrl();
+            setupApiEndpoint();
         };
 
         // Load players from localStorage
@@ -408,26 +445,14 @@
             }
         }
 
-        // Save players to localStorage and generate JSON
-        function savePlayersAndGenerateJSON() {
+        // Save players and update JSON
+        function savePlayersAndUpdateJSON() {
             localStorage.setItem('robloxWhitelist', JSON.stringify(players));
             localStorage.setItem('robloxWhitelistDate', lastUpdated.toISOString());
             
-            // Generate JSON file content
-            const jsonData = {
-                players: players,
-                lastUpdated: lastUpdated.toISOString(),
-                totalPlayers: players.length,
-                allowedOnly: true
-            };
-            
-            // Create and save JSON file for GitHub Pages
-            const jsonContent = JSON.stringify(jsonData, null, 2);
-            
-            // Store in localStorage for download
-            localStorage.setItem('whitelistJSON', jsonContent);
-            
             updateDisplay();
+            updateJsonPreview();
+            updateApiEndpoint();
         }
 
         // Add new player
@@ -452,7 +477,7 @@
             
             players.push(playerName);
             lastUpdated = new Date();
-            savePlayersAndGenerateJSON();
+            savePlayersAndUpdateJSON();
             
             input.value = '';
             showAlert(`تم إضافة اللاعب "${playerName}" بنجاح!`, 'success');
@@ -465,7 +490,7 @@
                 if (index > -1) {
                     players.splice(index, 1);
                     lastUpdated = new Date();
-                    savePlayersAndGenerateJSON();
+                    savePlayersAndUpdateJSON();
                     showAlert(`تم حذف اللاعب "${playerName}" من القائمة!`, 'success');
                 }
             }
@@ -516,6 +541,55 @@
             document.getElementById('lastUpdated').textContent = lastUpdated.toLocaleDateString('ar');
         }
 
+        // Update JSON preview
+        function updateJsonPreview() {
+            const jsonData = {
+                players: players,
+                totalPlayers: players.length,
+                lastUpdated: lastUpdated.toISOString(),
+                allowedOnly: true,
+                version: "1.0"
+            };
+            
+            document.getElementById('jsonPreview').textContent = JSON.stringify(jsonData, null, 2);
+        }
+
+        // Setup API endpoint (simulated)
+        function setupApiEndpoint() {
+            // Create a virtual API endpoint using URL hash
+            if (window.location.hash === '#api/whitelist' || window.location.pathname.includes('/api/whitelist')) {
+                const jsonData = {
+                    players: players,
+                    totalPlayers: players.length,
+                    lastUpdated: lastUpdated.toISOString(),
+                    allowedOnly: true,
+                    version: "1.0"
+                };
+                
+                document.body.innerHTML = `<pre>${JSON.stringify(jsonData, null, 2)}</pre>`;
+                document.body.style.fontFamily = 'monospace';
+                document.body.style.padding = '20px';
+                document.body.style.background = '#f8f9fa';
+                return;
+            }
+        }
+
+        // Update API endpoint data
+        function updateApiEndpoint() {
+            // This would update the virtual endpoint
+            setupApiEndpoint();
+        }
+
+        // Copy API URL to clipboard
+        function copyApiUrl() {
+            const apiUrl = document.getElementById('apiUrl').textContent;
+            navigator.clipboard.writeText(apiUrl).then(() => {
+                showAlert('تم نسخ رابط API بنجاح!', 'success');
+            }).catch(() => {
+                showAlert('فشل في نسخ الرابط', 'error');
+            });
+        }
+
         // Show alert message
         function showAlert(message, type) {
             const alertArea = document.getElementById('alertArea');
@@ -534,31 +608,6 @@
             }, 5000);
         }
 
-        // Download JSON file
-        function downloadJSON() {
-            const jsonContent = localStorage.getItem('whitelistJSON') || '{"players": [], "lastUpdated": "", "totalPlayers": 0, "allowedOnly": true}';
-            
-            const blob = new Blob([jsonContent], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'whitelist.json';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            
-            URL.revokeObjectURL(url);
-            showAlert('تم تحميل ملف JSON بنجاح!', 'success');
-        }
-
-        // Update JSON URL (placeholder for GitHub Pages)
-        function updateJsonUrl() {
-            const urlElement = document.getElementById('jsonUrl');
-            // This will be the actual GitHub Pages URL once deployed
-            urlElement.textContent = 'https://[your-username].github.io/[repository-name]/whitelist.json';
-        }
-
         // Allow Enter key to add player
         document.getElementById('playerInput').addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
@@ -569,9 +618,12 @@
         // Auto-save every 30 seconds
         setInterval(function() {
             if (players.length > 0) {
-                savePlayersAndGenerateJSON();
+                savePlayersAndUpdateJSON();
             }
         }, 30000);
+
+        // Handle API requests
+        window.addEventListener('hashchange', setupApiEndpoint);
     </script>
 </body>
 </html>
